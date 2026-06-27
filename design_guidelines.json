@@ -1,0 +1,141 @@
+{
+  "project_name": "SkillEn",
+  "theme": "Light Theme",
+  "archetype": "Archetype 4 (Swiss & High-Contrast) infused with Organic corporate tones",
+  "brand_identity": {
+    "tagline": "Learn. Grow. Lead.",
+    "logo": "Orange square with white 'S' + bold sans-serif 'SKILLEN' wordmark (the 'i' has an orange dot)",
+    "contact": {
+      "email": "info@skillen.in",
+      "phone": "+91 7070330407",
+      "socials": ["Instagram", "LinkedIn"]
+    }
+  },
+  "pages_map": [
+    "Home",
+    "Students",
+    "Companies",
+    "Colleges",
+    "Courses",
+    "Mock Interviews",
+    "Success Stories",
+    "About Us",
+    "Career Tips Blog",
+    "Contact",
+    "Admin Dashboard"
+  ],
+  "typography": {
+    "heading_font": "Cabinet Grotesk",
+    "body_font": "Satoshi",
+    "rationale": "Cabinet Grotesk delivers authority and a premium EdTech/corporate feel, steering clear of standard Inter/Roboto. Satoshi complements it with exceptional readability for dense course information.",
+    "scales": {
+      "h1": "text-5xl md:text-6xl tracking-tight leading-tight",
+      "h2": "text-3xl md:text-4xl tracking-tight",
+      "h3": "text-xl md:text-2xl",
+      "body": "text-base leading-relaxed text-[#163A44]",
+      "labels": "text-sm uppercase tracking-[0.2em] font-semibold"
+    }
+  },
+  "colors": {
+    "primary": "#06252C",
+    "primary_light": "#163A44",
+    "accent_orange": "#F26C21",
+    "accent_orange_hover": "#FF6600",
+    "background_main": "#FFFFFF",
+    "background_alt": "#F4F4F4",
+    "text_dark": "#06252C",
+    "text_muted": "#163A44",
+    "border": "rgba(6, 37, 44, 0.1)"
+  },
+  "layout_and_spacing": {
+    "philosophy": "Generous Spacing (p-8 to p-24). Avoid center-aligned symmetry. Use asymmetry and negative space to direct focus.",
+    "grid": "Bento Grid Strategy. Use grid-cols-1 md:grid-cols-12. Avoid simple equal columns. Overlap images and text blocks slightly for an editorial look."
+  },
+  "ui_components": {
+    "cards": "Cardless or 1px subtle border (#06252C/10) with transparent or #F4F4F4 backgrounds. No heavy drop shadows unless hovered.",
+    "buttons": {
+      "primary": "bg-[#F26C21] text-white hover:bg-[#FF6600] rounded-none md:rounded-sm transition-all focus:ring-2 focus:ring-[#06252C]",
+      "secondary": "bg-transparent border border-[#06252C] text-[#06252C] hover:bg-[#06252C] hover:text-white rounded-none md:rounded-sm transition-all"
+    },
+    "header": "Sticky glassmorphism: bg-white/80 backdrop-blur-xl border-b border-[#06252C]/10. Must contain main nav, logo, and 'Explore Programs' CTA.",
+    "forms": "Use Shadcn, but customize to remove the generic 'Vercel look'. Sharp corners or 4px max radius. Focus rings must be #F26C21."
+  },
+  "motion_and_interactions": {
+    "hover_states": "Buttons must shift color; cards translate-y by -4px with shadow-lg. Text color MUST be explicitly set on hover.",
+    "animations": "Use Framer Motion for staggered fade-ups on Bento grids. Stats counters must animate from 0 on scroll. Tracing beam border for the pricing cards."
+  },
+  "specific_sections": {
+    "hero": "3 distinct CTAs (Explore Programs, Hire Talent, Partner). High contrast headline. Real UI context or mosaic of the target audiences instead of vector art.",
+    "stats": "Animated counters (500+, 100+, 50+, 20+) set in a massive, clean typographic band (bg-[#06252C] text-white).",
+    "ecosystem": "3 Audience Cards: Students, Companies, Colleges. Use varied grid spans (e.g., 5-col, 4-col, 3-col).",
+    "placement_process": "6-step visual path. Left-aligned steps, connected by an SVG line with a glowing #F26C21 indicator moving down.",
+    "mock_interviews": "Pricing tier cards. ₹499 and ₹999. The ₹999 card should have the 'Tracing Beam' border effect or a solid #06252C background.",
+    "admin_dashboard": "Strict, dense 'Control Room' grid. Pure functionality. Shadcn tables for leads, form submissions, and blog management."
+  },
+  "media_assets": {
+    "hero_and_students": [
+      {
+        "url": "https://images.unsplash.com/photo-1516321497487-e288fb19713f",
+        "description": "Group collaborating around laptop",
+        "category": "Hero Background or Students Card"
+      },
+      {
+        "url": "https://images.pexels.com/photos/9159042/pexels-photo-9159042.jpeg",
+        "description": "Students in interactive learning environment",
+        "category": "Courses / Students Page"
+      }
+    ],
+    "companies_and_hire": [
+      {
+        "url": "https://images.pexels.com/photos/8463151/pexels-photo-8463151.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+        "description": "Corporate office meeting",
+        "category": "Companies / Hire Talent Card"
+      }
+    ],
+    "colleges_and_partners": [
+      {
+        "url": "https://images.pexels.com/photos/7972324/pexels-photo-7972324.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+        "description": "Students walking on campus",
+        "category": "Colleges / Partner With Us Card"
+      }
+    ],
+    "testimonials": [
+      {
+        "url": "https://images.pexels.com/photos/26872232/pexels-photo-26872232.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+        "description": "Professional young man",
+        "category": "Success Stories"
+      },
+      {
+        "url": "https://images.pexels.com/photos/31869537/pexels-photo-31869537.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+        "description": "Confident businesswoman",
+        "category": "Success Stories"
+      }
+    ],
+    "partner_logos": [
+      {
+        "url": "https://images.unsplash.com/photo-1496200186974-4293800e2c20?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NTY2Njd8MHwxfHNlYXJjaHwzfHxjb21wYW55JTIwbG9nb3xlbnwwfHx8fDE3ODIzODA1OTl8MA&ixlib=rb-4.1.0&q=85",
+        "description": "Slack",
+        "category": "Logo Strip"
+      },
+      {
+        "url": "https://images.unsplash.com/photo-1599305445671-ac291c95aaa9?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NTY2Njd8MHwxfHNlYXJjaHwxfHxjb21wYW55JTIwbG9nb3xlbnwwfHx8fDE3ODIzODA1OTl8MA&ixlib=rb-4.1.0&q=85",
+        "description": "VW",
+        "category": "Logo Strip"
+      },
+      {
+        "url": "https://images.unsplash.com/photo-1562783912-21ad31ee2a83?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NTY2Njd8MHwxfHNlYXJjaHw0fHxjb21wYW55JTIwbG9nb3xlbnwwfHx8fDE3ODIzODA1OTl8MA&ixlib=rb-4.1.0&q=85",
+        "description": "Jaguar",
+        "category": "Logo Strip"
+      }
+    ]
+  },
+  "testing": {
+    "attributes": "All interactive and key informational elements MUST include a data-testid attribute in kebab-case."
+  },
+  "instructions_to_main_agent": [
+    "Use pure HTML + Tailwind for marketing layouts. Only use Shadcn for complex forms, dropdowns, and the Admin Dashboard.",
+    "Do NOT use placeholder image URLs. Use the provided media URLs and apply CSS filters (like grayscale or mix-blend-mode) if needed.",
+    "Implement lucide-react for iconography.",
+    "Apply strict contrast checks. Text over images must use gradient overlays (bg-black/40) if necessary."
+  ]
+}
