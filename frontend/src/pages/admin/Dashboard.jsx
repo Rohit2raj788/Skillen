@@ -12,6 +12,7 @@ const LEAD_TYPE_LABELS = {
   college: "College Inquiry",
   mock_booking: "Mock Booking",
   student_enroll: "Student Enroll",
+  job_apply: "Job Application",
 };
 
 const TYPE_COLORS = {
@@ -20,6 +21,7 @@ const TYPE_COLORS = {
   college: "bg-green-100 text-green-800",
   mock_booking: "bg-orange-100 text-orange-800",
   student_enroll: "bg-pink-100 text-pink-800",
+  job_apply: "bg-teal-100 text-teal-800",
 };
 
 export default function AdminDashboard() {
@@ -124,7 +126,7 @@ export default function AdminDashboard() {
         {tab === "leads" && (
           <div data-testid="leads-panel">
             <div className="flex flex-wrap gap-2 mb-4">
-              {["all", "contact", "hiring", "college", "mock_booking", "student_enroll"].map((t) => (
+              {["all", "contact", "hiring", "college", "mock_booking", "student_enroll", "job_apply"].map((t) => (
                 <button key={t} onClick={() => setLeadType(t)} data-testid={`filter-${t}`}
                   className={`text-xs uppercase tracking-[0.2em] font-bold px-3 py-2 rounded-sm border ${leadType === t ? "bg-[#06252C] text-white border-[#06252C]" : "bg-white border-[#06252C]/20 text-[#06252C] hover:border-[#F26C21]"}`}>
                   {t === "all" ? "All" : LEAD_TYPE_LABELS[t]}
@@ -209,6 +211,35 @@ export default function AdminDashboard() {
                   </div>
                 </div>
               ))}
+            </div>
+          </div>
+        )}
+
+        {tab === "jobs" && (
+          <div data-testid="jobs-panel">
+            <div className="flex justify-between items-center mb-4">
+              <p className="text-sm text-[#06252C]/70">{jobs.length} posting(s)</p>
+              <button onClick={() => setShowJob({})} data-testid="new-job-btn" className="inline-flex items-center gap-2 bg-[#F26C21] text-white px-4 py-2 text-sm font-semibold rounded-sm hover:bg-[#FF6600]">
+                <Plus size={14} /> New Posting
+              </button>
+            </div>
+            <div className="grid md:grid-cols-2 gap-4">
+              {jobs.map((j) => (
+                <div key={j.id} className="bg-white p-5 rounded-sm border border-[#06252C]/10" data-testid={`admin-job-${j.id}`}>
+                  <div className="flex items-start justify-between">
+                    <div>
+                      <p className="text-[10px] uppercase tracking-[0.2em] font-bold text-[#F26C21]">{j.type} · {j.location}</p>
+                      <p className="font-display text-lg font-bold text-[#06252C] mt-1">{j.title}</p>
+                      <p className="text-xs text-[#06252C]/60 mt-1">{j.company} · {j.published ? "Published" : "Draft"}</p>
+                    </div>
+                    <div className="flex gap-2">
+                      <button onClick={() => setShowJob(j)} className="text-xs text-[#06252C] underline hover:text-[#F26C21]">Edit</button>
+                      <button onClick={() => deleteJob(j.id)} className="text-red-600 hover:text-red-800"><Trash2 size={14} /></button>
+                    </div>
+                  </div>
+                </div>
+              ))}
+              {jobs.length === 0 && <p className="text-sm text-[#06252C]/60">No postings yet — click "New Posting" to add one.</p>}
             </div>
           </div>
         )}

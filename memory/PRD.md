@@ -37,6 +37,15 @@ Build a modern, responsive marketing website + admin dashboard for SkillEn — a
 - ✅ Floating WhatsApp CTA
 - ✅ Brand-correct color palette + custom Cabinet Grotesk + Satoshi typography
 
+## What's Implemented (Feb 2026 — v2)
+- ✅ Public **/jobs** + **/internships** pages with search + Job/Internship filter
+- ✅ Apply modal → captures `job_apply` lead with name/email/phone/resume URL/cover note
+- ✅ Admin Dashboard **Jobs tab** with CRUD modal (create/edit/delete postings)
+- ✅ 4 sample jobs seeded on startup; `total_jobs` added to admin stats
+- ✅ Free rule-based **SkillBot chatbot** (intent-matching: programs, mock, jobs, pricing, contact, hiring, etc.) with quick-reply chips + route shortcuts
+- ✅ Floating WhatsApp moved to bottom-left, chatbot toggle on bottom-right (no overlap)
+- ✅ Leads tab now supports `job_apply` filter + Job Application badge
+
 ## Admin Credentials
 - `admin@skillen.in` / `SkillEn@2026` (see `/app/memory/test_credentials.md`)
 
