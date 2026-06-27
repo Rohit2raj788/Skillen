@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useParams, Link } from "react-router-dom";
+import { useLocation, Link } from "react-router-dom";
 import { toast } from "sonner";
 import { ArrowRight, MapPin, Calendar, Briefcase, X } from "lucide-react";
 import { SectionLabel, SectionHeading, PrimaryBtn } from "@/components/Primitives";
@@ -8,8 +8,8 @@ import { Input } from "@/pages/Students";
 import { api, formatApiError } from "@/lib/api";
 
 export default function Jobs() {
-  const { type: routeType } = useParams(); // optional 'internships' or 'jobs'
-  const isInternships = routeType === "internships";
+  const location = useLocation();
+  const isInternships = location.pathname.startsWith("/internships");
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
   const [q, setQ] = useState("");

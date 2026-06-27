@@ -1,0 +1,14 @@
+{
+  "summary": "Re-tested SEO meta fix on /internships after switching from useParams to useLocation. All 3 checks pass: /internships document.title and og:title contain 'Internship Openings · SkillEn', /jobs still shows 'Live Jobs & Internships · SkillEn' (no regression).",
+  "tested_scope": ["frontend"],
+  "passed": [
+    "/internships document.title = 'Internship Openings · SkillEn'",
+    "/internships meta[og:title] = 'Internship Openings · SkillEn'",
+    "/jobs document.title = 'Live Jobs & Internships · SkillEn' (no regression)"
+  ],
+  "failed": [],
+  "action_items": [],
+  "success_rate": {"backend": "N/A", "frontend": "100%"},
+  "retest_needed": false,
+  "full_testing_deferred": true
+}
