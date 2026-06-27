@@ -44,7 +44,7 @@ export default function AdminLogin() {
 
       <div className="flex items-center justify-center p-8 lg:p-16">
         <form onSubmit={submit} className="w-full max-w-md" data-testid="admin-login-form">
-          <Link to="/" className="lg:hidden mb-8 block"><Logo /></Link>
+          <div className="lg:hidden mb-8 block"><Logo /></div>
           <p className="text-xs uppercase tracking-[0.25em] text-[#F26C21] font-bold">Admin Login</p>
           <h2 className="mt-3 font-display text-3xl font-extrabold text-[#06252C]">Sign in to continue</h2>
 
