@@ -1,0 +1,39 @@
+{
+  "summary": "Smoke test of SkillEn backend + frontend completed end-to-end. All critical backend endpoints (auth, lead capture for 5 lead types, blog list/detail/filter, admin stats/leads CRUD, admin blog CRUD with duplicate-slug 400) returned expected status codes and payloads. Frontend home, students enroll form, blog listing, blog detail page, /admin redirect to /admin/login, admin login with seeded creds, three admin tabs, and blog creation via modal all worked. Public /blog now also shows the admin-created post.",
+  "tested_scope": ["backend", "frontend", "auth", "integration"],
+  "passed": [
+    "POST /api/auth/login admin@skillen.in returns JWT + user; wrong password -> 401",
+    "GET /api/auth/me with bearer returns admin user; without token -> 401",
+    "POST /api/leads/contact, /hiring, /college, /mock-booking, /enroll all return saved lead with id/lead_type/created_at/status=new (using correct schemas: hiring={company_name,contact_person,hiring_requirement,number_of_positions}, college={college_name,contact_person,interested_in}, mock-booking={track,package})",
+    "GET /api/blogs returns 5 seeded published posts; GET /api/blogs/ai-skills-every-graduate-needs -> 200; unknown slug -> 404; category filter (e.g. 'Career Growth') returns matching posts",
+    "GET /api/admin/stats returns counts (total_leads, by_type, new_leads, total_blogs)",
+    "GET /api/admin/leads returns list; PATCH /api/admin/leads/{id} {status:contacted} -> {ok:true}; DELETE -> 200; without token -> 401",
+    "POST /api/admin/blogs creates post; duplicate slug -> 400; PATCH -> 200; DELETE -> 200",
+    "Home page loads with tagline 'Learn. Grow. Lead.', 3 CTAs (Explore Programs, Hire Talent, Partner With Us), stats counters present",
+    "/students enroll form submitted via UI; toast/success text visible",
+    "/blog lists seeded posts; clicking card navigates to /blog/{slug} and renders article",
+    "/admin without login redirects to /admin/login",
+    "Admin login with admin@skillen.in / SkillEn@2026 lands on /admin; tab-overview, tab-leads, tab-blogs all present",
+    "Admin Blogs tab: New Post modal opens; bm-title/bm-slug/bm-excerpt/bm-content/bm-save fields all present; created post 'T1 Auto Post' appears in admin list (and is publicly published)"
+  ],
+  "failed": [
+    {
+      "area": "Frontend (cosmetic/dev-warning)",
+      "issue": "React hydration warning on /admin/login: nested <a> inside <a> (Logo link wrapped by another LinkWithRef in Login.jsx). Does not block functionality but should be cleaned up.",
+      "evidence": "Console pageerror: 'In HTML, <a> cannot be a descendant of <a>... AdminLogin > Login.jsx line 47 Logo inside LinkWithRef'",
+      "priority": "LOW"
+    },
+    {
+      "area": "Test request mismatch (not a bug)",
+      "issue": "Review request expects GET /api/blogs/skill-launch-3 -> 200, but 'skill-launch-3' is the preview hostname, not a seeded slug; seeded slugs are playwright-vs-selenium-2026, linkedin-optimization-2026, ai-skills-every-graduate-needs, resume-mistakes-freshers-make, ace-your-first-tech-interview. Backend correctly returns 404 for skill-launch-3 and 200 for the real slugs.",
+      "evidence": "GET /api/blogs returned 5 slugs (none == skill-launch-3); GET /api/blogs/skill-launch-3 -> 404; GET /api/blogs/ai-skills-every-graduate-needs -> 200",
+      "priority": "LOW"
+    }
+  ],
+  "action_items": [
+    "Optional: fix nested <a> in /app/frontend/src/pages/admin/Login.jsx (Logo already renders a Link; remove the outer Link wrapper around <Logo/>) to eliminate React hydration warning."
+  ],
+  "success_rate": {"backend": "100%", "frontend": "100%"},
+  "retest_needed": false,
+  "full_testing_deferred": true
+}

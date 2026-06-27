@@ -1,53 +1,57 @@
-import { useEffect } from "react";
+import React from "react";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { Toaster } from "sonner";
 import "@/App.css";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import axios from "axios";
-import { HOME } from "@/constants/testIds";
 
-const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
-const API = `${BACKEND_URL}/api`;
+import { AuthProvider, useAuth } from "@/context/AuthContext";
+import Layout from "@/components/Layout";
+import Home from "@/pages/Home";
+import Students from "@/pages/Students";
+import Companies from "@/pages/Companies";
+import Colleges from "@/pages/Colleges";
+import Courses from "@/pages/Courses";
+import MockInterviews from "@/pages/MockInterviews";
+import SuccessStories from "@/pages/SuccessStories";
+import About from "@/pages/About";
+import Blog, { BlogDetail } from "@/pages/Blog";
+import Contact from "@/pages/Contact";
+import AdminLogin from "@/pages/admin/Login";
+import AdminDashboard from "@/pages/admin/Dashboard";
 
-const Home = () => {
-  const helloWorldApi = async () => {
-    try {
-      const response = await axios.get(`${API}/`);
-      console.log(response.data.message);
-    } catch (e) {
-      console.error(e, `errored out requesting / api`);
-    }
-  };
+function ProtectedAdmin({ children }) {
+  const { user, loading } = useAuth();
+  if (loading) return <div className="min-h-screen grid place-items-center text-[#06252C]">Loading…</div>;
+  if (!user || user.role !== "admin") return <Navigate to="/admin/login" replace />;
+  return children;
+}
 
-  useEffect(() => {
-    helloWorldApi();
-  }, []);
-
-  return (
-    <div>
-      <header className="App-header">
-        <a
-          data-testid={HOME.emergentLink}
-          className="App-link"
-          href="https://emergent.sh"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <img src="https://avatars.githubusercontent.com/in/1201222?s=120&u=2686cf91179bbafbc7a71bfbc43004cf9ae1acea&v=4" />
-        </a>
-        <p className="mt-5">Building something incredible ~!</p>
-      </header>
-    </div>
-  );
-};
+const wrap = (node) => <Layout>{node}</Layout>;
 
 function App() {
   return (
     <div className="App">
       <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Home />}>
-            <Route index element={<Home />} />
-          </Route>
-        </Routes>
+        <AuthProvider>
+          <Toaster position="top-right" richColors />
+          <Routes>
+            <Route path="/" element={wrap(<Home />)} />
+            <Route path="/students" element={wrap(<Students />)} />
+            <Route path="/companies" element={wrap(<Companies />)} />
+            <Route path="/colleges" element={wrap(<Colleges />)} />
+            <Route path="/courses" element={wrap(<Courses />)} />
+            <Route path="/mock-interviews" element={wrap(<MockInterviews />)} />
+            <Route path="/success-stories" element={wrap(<SuccessStories />)} />
+            <Route path="/about" element={wrap(<About />)} />
+            <Route path="/blog" element={wrap(<Blog />)} />
+            <Route path="/blog/:slug" element={wrap(<BlogDetail />)} />
+            <Route path="/contact" element={wrap(<Contact />)} />
+
+            <Route path="/admin/login" element={<AdminLogin />} />
+            <Route path="/admin" element={<ProtectedAdmin><AdminDashboard /></ProtectedAdmin>} />
+
+            <Route path="*" element={<Navigate to="/" replace />} />
+          </Routes>
+        </AuthProvider>
       </BrowserRouter>
     </div>
   );
