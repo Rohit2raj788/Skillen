@@ -33,6 +33,10 @@ export default function Jobs() {
 
   return (
     <>
+      <Seo
+        title={isInternships ? "Internship Openings" : "Live Jobs & Internships"}
+        description="Browse and apply to live openings from SkillEn's 50+ hiring partner network. Real recruiters, fast responses."
+      />
       <section className="border-b border-[#06252C]/10 bg-[#F4F4F4]">
         <div className="mx-auto max-w-7xl px-5 lg:px-10 py-16">
           <SectionLabel>{isInternships ? "Internships" : "Jobs & Internships"}</SectionLabel>

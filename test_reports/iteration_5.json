@@ -1,0 +1,25 @@
+{
+  "summary": "Re-tested SEO meta on /jobs and /internships. /jobs fix verified PASS. /internships fix FAILS — title still renders 'Live Jobs & Internships · SkillEn' instead of 'Internship Openings · SkillEn'.",
+  "tested_scope": ["frontend"],
+  "passed": [
+    "/jobs document.title contains 'Live Jobs & Internships' ('Live Jobs & Internships · SkillEn')",
+    "/jobs og:title contains 'Live Jobs & Internships'",
+    "/jobs og:description present",
+    "/jobs og:image present (customer-assets...skillen logo)",
+    "/jobs twitter:card = 'summary_large_image'"
+  ],
+  "failed": [
+    {
+      "area": "frontend / SEO (/internships route)",
+      "issue": "document.title on /internships is 'Live Jobs & Internships · SkillEn' — does NOT contain 'Internship Openings'. og:title also reflects the Jobs page title, not the Internships title.",
+      "evidence": "Root cause: Jobs.jsx derives the page via `const { type: routeType } = useParams(); const isInternships = routeType === 'internships';` — but App.js registers static routes `<Route path='/jobs' />` and `<Route path='/internships' />` (no `:type` param). Therefore `useParams()` returns no `type`, `isInternships` is always false on /internships, and <Seo title={isInternships ? 'Internship Openings' : 'Live Jobs & Internships'} /> always renders the Jobs title. Observed at https://skill-launch-3.preview.emergentagent.com/internships → title 'Live Jobs & Internships · SkillEn'.",
+      "priority": "HIGH"
+    }
+  ],
+  "action_items": [
+    "In /app/frontend/src/pages/Jobs.jsx, detect the route by pathname instead of useParams. Replace `const { type: routeType } = useParams(); const isInternships = routeType === 'internships';` with `import { useLocation } from 'react-router-dom'; const location = useLocation(); const isInternships = location.pathname.startsWith('/internships');` — OR change App.js routes to `<Route path='/:type(jobs|internships)' element={...} />` so useParams populates `type`."
+  ],
+  "success_rate": {"backend": "n/a", "frontend": "50% (1 of 2 routes passed)"},
+  "retest_needed": true,
+  "full_testing_deferred": true
+}
