@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { toast } from "sonner";
 import { SectionHeading, SectionLabel, PrimaryBtn } from "@/components/Primitives";
+import Seo from "@/components/Seo";
 import { Input } from "@/pages/Students";
 import { api, formatApiError } from "@/lib/api";
 import { Building, Users, Briefcase, Target, Layers, Workflow } from "lucide-react";
@@ -34,6 +35,7 @@ export default function Companies() {
 
   return (
     <>
+      <Seo title="Hire Industry-Ready Talent Faster" description="Pre-screened freshers and interns across 8 domains. Reduce time-to-hire by up to 60% with SkillEn's hiring partner network." />
       <section className="bg-[#06252C] text-white">
         <div className="mx-auto max-w-7xl px-5 lg:px-10 py-20 lg:py-28 grid lg:grid-cols-2 gap-10 items-center">
           <div>

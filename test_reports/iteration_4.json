@@ -1,0 +1,29 @@
+{
+  "summary": "SEO/sitemap/robots/Helmet testing. Static assets (sitemap.xml with 12 URLs, robots.txt with Disallow:/admin and Sitemap directive, default index.html title/description) all valid. Dynamic per-route titles via react-helmet-async work for /, /mock-interviews, /about. OrgSchema JSON-LD present. Admin login regression passes. BUG: /jobs page does NOT update title or inject og:* / twitter:card meta tags — Jobs.jsx imports Seo but never renders <Seo />.",
+  "tested_scope": ["frontend", "integration"],
+  "passed": [
+    "GET /sitemap.xml → 200, valid XML, exactly 12 <loc> entries (/, /students, /companies, /colleges, /courses, /jobs, /internships, /mock-interviews, /success-stories, /blog, /about, /contact)",
+    "GET /robots.txt → 200, contains 'Disallow: /admin' and 'Sitemap: https://skillen.in/sitemap.xml'",
+    "Static index.html contains default <title>SkillEn — Learn. Grow. Lead.</title> and SkillEn description meta (visible without JS)",
+    "Home (/) document.title after hydration = 'Launch Your Career with Industry-Ready Skills · SkillEn'",
+    "/mock-interviews title = 'Mock Interviews (₹499 / ₹999) · SkillEn'",
+    "/about title = 'About SkillEn — Bridging Education & Employability · SkillEn'",
+    "EducationalOrganization JSON-LD schema present in document.head (OrgSchema)",
+    "No Helmet-related console errors (0 console errors total during navigation)",
+    "Regression: admin login works (admin@skillen.in / SkillEn@2026) → redirects to /admin, skillen_token set in localStorage, dashboard renders"
+  ],
+  "failed": [
+    {
+      "area": "frontend / SEO – /jobs route",
+      "issue": "/jobs page does not set its per-route title, og:title, og:description, og:image, or twitter:card. document.title remains default 'SkillEn — Learn. Grow. Lead.' and meta[property=og:title] is absent.",
+      "evidence": "grep on /app/frontend/src/pages/Jobs.jsx shows `import Seo from \"@/components/Seo\";` on line 6 but NO `<Seo ... />` JSX render anywhere in the file. Playwright on /jobs returned: jobs_title='SkillEn — Learn. Grow. Lead.', jobs_og_title=None, jobs_twitter_card=False, jobs_og_image=False. Note App.js routes both /jobs and /internships to <Jobs />, so both routes are affected.",
+      "priority": "HIGH"
+    }
+  ],
+  "action_items": [
+    "In /app/frontend/src/pages/Jobs.jsx, actually render <Seo title=\"Live Jobs & Internships ...\" description=\"...\" /> at the top of the component JSX (currently only imported, never used). This will fix both /jobs and /internships routes since App.js maps both to the same Jobs component."
+  ],
+  "success_rate": {"backend": "N/A (not tested per request)", "frontend": "~88% (7/8 SEO checks pass; /jobs Seo missing)"},
+  "retest_needed": true,
+  "full_testing_deferred": true
+}

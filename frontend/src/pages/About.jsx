@@ -1,10 +1,12 @@
 import React from "react";
 import { SectionHeading, SectionLabel } from "@/components/Primitives";
+import Seo from "@/components/Seo";
 import { VALUES } from "@/data/content";
 
 export default function About() {
   return (
     <>
+      <Seo title="About SkillEn — Bridging Education & Employability" description="SkillEn is on a mission to close the gap between graduating students and the careers they deserve, with 500+ placements and 50+ hiring partners." />
       <section className="border-b border-[#06252C]/10">
         <div className="mx-auto max-w-7xl px-5 lg:px-10 py-20 grid lg:grid-cols-12 gap-10">
           <div className="lg:col-span-7">

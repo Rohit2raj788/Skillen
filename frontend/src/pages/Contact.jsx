@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { toast } from "sonner";
 import { Mail, Phone, MessageCircle, Instagram, Linkedin } from "lucide-react";
 import { SectionLabel, PrimaryBtn } from "@/components/Primitives";
+import Seo from "@/components/Seo";
 import { Input } from "@/pages/Students";
 import { api, formatApiError } from "@/lib/api";
 import { CONTACT } from "@/data/content";
@@ -26,6 +27,7 @@ export default function Contact() {
 
   return (
     <section className="py-20">
+      <Seo title="Contact SkillEn" description="Reach SkillEn at info@skillen.in or +91 7070330407. We respond to every student, company and college inquiry within 24 hours." />
       <div className="mx-auto max-w-7xl px-5 lg:px-10 grid lg:grid-cols-12 gap-12">
         <div className="lg:col-span-5">
           <SectionLabel>Contact</SectionLabel>

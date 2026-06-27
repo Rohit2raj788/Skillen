@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { toast } from "sonner";
 import { Check } from "lucide-react";
 import { SectionHeading, SectionLabel, PrimaryBtn } from "@/components/Primitives";
+import Seo from "@/components/Seo";
 import { Input } from "@/pages/Students";
 import { api, formatApiError } from "@/lib/api";
 import { MOCK_TRACKS } from "@/data/content";
@@ -42,6 +43,7 @@ export default function MockInterviews() {
 
   return (
     <>
+      <Seo title="Mock Interviews (₹499 / ₹999)" description="Live mock interviews with senior hiring managers across Java, SQL, Automation, API, Sales & HR. Detailed feedback after every round." />
       <section className="border-b border-[#06252C]/10 bg-[#F4F4F4]">
         <div className="mx-auto max-w-7xl px-5 lg:px-10 py-20">
           <SectionLabel>Mock Interviews</SectionLabel>

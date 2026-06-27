@@ -2,6 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { ArrowRight, GraduationCap, Building2, School, Sparkles, Quote } from "lucide-react";
 import { Counter, SectionHeading, SectionLabel, PrimaryBtn, SecondaryBtn } from "@/components/Primitives";
+import Seo from "@/components/Seo";
 import TrendingJobs from "@/components/TrendingJobs";
 import {
   STATS, WHY_CHOOSE, PROGRAMS, PLACEMENT_STEPS, TESTIMONIALS, PARTNER_NAMES,
@@ -12,6 +13,10 @@ const HERO_IMG = "https://images.unsplash.com/photo-1516321497487-e288fb19713f?a
 export default function Home() {
   return (
     <>
+      <Seo
+        title="Launch Your Career with Industry-Ready Skills"
+        description="SkillEn helps students get job-ready, companies hire pre-screened talent, and colleges build future-ready graduates. 500+ students trained, 50+ hiring partners."
+      />
       {/* HERO */}
       <section className="relative overflow-hidden border-b border-[#06252C]/10" data-testid="hero-section">
         <div className="mx-auto max-w-7xl px-5 lg:px-10 grid lg:grid-cols-12 gap-10 py-16 lg:py-24">

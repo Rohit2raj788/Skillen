@@ -1,11 +1,13 @@
 import React from "react";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { Toaster } from "sonner";
+import { HelmetProvider } from "react-helmet-async";
 import "@/App.css";
 
 import { AuthProvider, useAuth } from "@/context/AuthContext";
 import Layout from "@/components/Layout";
 import ScrollToTop from "@/components/ScrollToTop";
+import { OrgSchema } from "@/components/Seo";
 import Home from "@/pages/Home";
 import Students from "@/pages/Students";
 import Companies from "@/pages/Companies";
@@ -32,10 +34,12 @@ const wrap = (node) => <Layout>{node}</Layout>;
 function App() {
   return (
     <div className="App">
-      <BrowserRouter>
-        <AuthProvider>
-          <ScrollToTop />
-          <Toaster position="top-right" richColors />
+      <HelmetProvider>
+        <BrowserRouter>
+          <AuthProvider>
+            <ScrollToTop />
+            <OrgSchema />
+            <Toaster position="top-right" richColors />
           <Routes>
             <Route path="/" element={wrap(<Home />)} />
             <Route path="/students" element={wrap(<Students />)} />
@@ -56,8 +60,9 @@ function App() {
 
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
-        </AuthProvider>
-      </BrowserRouter>
+          </AuthProvider>
+        </BrowserRouter>
+      </HelmetProvider>
     </div>
   );
 }

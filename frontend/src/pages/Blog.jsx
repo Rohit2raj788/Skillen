@@ -22,6 +22,7 @@ export default function Blog() {
 
   return (
     <>
+      <Seo title="Career Tips & Insights" description="Honest, practical career advice from people in the room — interview prep, resume tips, AI skills, and tech trends." />
       <section className="border-b border-[#06252C]/10">
         <div className="mx-auto max-w-7xl px-5 lg:px-10 py-20">
           <SectionLabel>Career Tips</SectionLabel>
@@ -87,6 +88,7 @@ export function BlogDetail() {
 
   return (
     <article className="mx-auto max-w-3xl px-5 lg:px-10 py-16">
+      <Seo title={post.title} description={post.excerpt} image={post.cover_image} type="article" />
       <Link to="/blog" className="inline-flex items-center gap-2 text-sm text-[#06252C] hover:text-[#F26C21]" data-testid="blog-back">
         <ArrowLeft size={14} /> Back to all articles
       </Link>

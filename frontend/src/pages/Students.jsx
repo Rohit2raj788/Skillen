@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { toast } from "sonner";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { SectionHeading, SectionLabel, PrimaryBtn } from "@/components/Primitives";
+import Seo from "@/components/Seo";
 import { api, formatApiError } from "@/lib/api";
 import { FAQ_STUDENTS, PROGRAMS, PLACEMENT_STEPS } from "@/data/content";
 import { BookOpen, Briefcase, Target, Mic, FileText, Users } from "lucide-react";
@@ -35,6 +36,7 @@ export default function Students() {
 
   return (
     <>
+      <Seo title="For Students — Training, Internships & Placements" description="Job-ready training, internship support, mock interviews, resume building, and active placement referrals — from one platform." />
       <section className="bg-[#F4F4F4] border-b border-[#06252C]/10">
         <div className="mx-auto max-w-7xl px-5 lg:px-10 py-20 lg:py-28 grid lg:grid-cols-2 gap-10 items-center">
           <div>

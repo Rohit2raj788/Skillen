@@ -3,6 +3,7 @@ import { useParams, Link } from "react-router-dom";
 import { toast } from "sonner";
 import { ArrowRight, MapPin, Calendar, Briefcase, X } from "lucide-react";
 import { SectionLabel, SectionHeading, PrimaryBtn } from "@/components/Primitives";
+import Seo from "@/components/Seo";
 import { Input } from "@/pages/Students";
 import { api, formatApiError } from "@/lib/api";
 

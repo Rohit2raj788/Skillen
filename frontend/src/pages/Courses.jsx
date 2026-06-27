@@ -2,11 +2,13 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { ArrowRight } from "lucide-react";
 import { SectionHeading, SectionLabel } from "@/components/Primitives";
+import Seo from "@/components/Seo";
 import { PROGRAMS } from "@/data/content";
 
 export default function Courses() {
   return (
     <>
+      <Seo title="Career-Defining Programs" description="Tech Job Readiness, Soft Skills & Interview Prep, Sales & BD, AI & Digital Skills — every track ends with mock interviews and active placement referrals." />
       <section className="border-b border-[#06252C]/10">
         <div className="mx-auto max-w-7xl px-5 lg:px-10 py-20">
           <SectionLabel>Programs</SectionLabel>

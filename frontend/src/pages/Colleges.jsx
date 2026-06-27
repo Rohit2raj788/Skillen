@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { toast } from "sonner";
 import { SectionHeading, SectionLabel, PrimaryBtn } from "@/components/Primitives";
+import Seo from "@/components/Seo";
 import { Input } from "@/pages/Students";
 import { api, formatApiError } from "@/lib/api";
 import { GraduationCap, Code2, Mic, MessageSquare, Briefcase, Users2 } from "lucide-react";
@@ -34,6 +35,7 @@ export default function Colleges() {
 
   return (
     <>
+      <Seo title="Career-Readiness Programs for Colleges" description="Placement training, bootcamps, mock interview drives, and industry expert sessions for 20+ partner colleges across India." />
       <section className="border-b border-[#06252C]/10 bg-[#F4F4F4]">
         <div className="mx-auto max-w-7xl px-5 lg:px-10 py-20 lg:py-28 grid lg:grid-cols-2 gap-10 items-center">
           <div>
