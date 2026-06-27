@@ -38,6 +38,9 @@ export default function Home() {
               <Link to="/courses" data-testid="hero-cta-explore">
                 <PrimaryBtn>Explore Programs <ArrowRight size={16} /></PrimaryBtn>
               </Link>
+              <Link to="/jobs" data-testid="hero-cta-get-job">
+                <PrimaryBtn className="bg-[#06252C] hover:bg-[#163A44]">Get Internship/Job <ArrowRight size={16} /></PrimaryBtn>
+              </Link>
               <Link to="/companies" data-testid="hero-cta-hire">
                 <SecondaryBtn>Hire Talent</SecondaryBtn>
               </Link>
