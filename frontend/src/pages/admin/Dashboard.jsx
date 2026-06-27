@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { toast } from "sonner";
-import { LogOut, Users, FileText, Inbox, BarChart3, Trash2, Plus, X } from "lucide-react";
+import { LogOut, Users, FileText, Inbox, BarChart3, Trash2, Plus, X, Briefcase } from "lucide-react";
 import { Logo } from "@/components/Layout";
 import { useAuth } from "@/context/AuthContext";
 import { api, formatApiError } from "@/lib/api";
@@ -29,9 +29,11 @@ export default function AdminDashboard() {
   const [stats, setStats] = useState(null);
   const [leads, setLeads] = useState([]);
   const [blogs, setBlogs] = useState([]);
+  const [jobs, setJobs] = useState([]);
   const [leadType, setLeadType] = useState("all");
   const [expanded, setExpanded] = useState(null);
-  const [showBlog, setShowBlog] = useState(null); // either null or blog object
+  const [showBlog, setShowBlog] = useState(null);
+  const [showJob, setShowJob] = useState(null);
 
   const doLogout = () => { logout(); navigate("/admin/login"); };
 
@@ -45,10 +47,14 @@ export default function AdminDashboard() {
   const loadBlogs = async () => {
     try { const { data } = await api.get("/admin/blogs"); setBlogs(data); } catch (e) { toast.error(formatApiError(e)); }
   };
+  const loadJobs = async () => {
+    try { const { data } = await api.get("/admin/jobs"); setJobs(data); } catch (e) { toast.error(formatApiError(e)); }
+  };
 
   useEffect(() => { loadStats(); }, []);
   useEffect(() => { if (tab === "leads") loadLeads(); }, [tab, leadType]);
   useEffect(() => { if (tab === "blogs") loadBlogs(); }, [tab]);
+  useEffect(() => { if (tab === "jobs") loadJobs(); }, [tab]);
 
   const updateStatus = async (id, status) => {
     try { await api.patch(`/admin/leads/${id}`, { status }); toast.success("Updated"); loadLeads(); loadStats(); }
@@ -89,6 +95,7 @@ export default function AdminDashboard() {
           <TabBtn active={tab === "overview"} onClick={() => setTab("overview")} icon={<BarChart3 size={14} />} label="Overview" tid="tab-overview" />
           <TabBtn active={tab === "leads"} onClick={() => setTab("leads")} icon={<Inbox size={14} />} label="Leads" tid="tab-leads" />
           <TabBtn active={tab === "blogs"} onClick={() => setTab("blogs")} icon={<FileText size={14} />} label="Blog" tid="tab-blogs" />
+          <TabBtn active={tab === "jobs"} onClick={() => setTab("jobs")} icon={<Briefcase size={14} />} label="Jobs" tid="tab-jobs" />
         </div>
 
         {tab === "overview" && (
@@ -208,6 +215,7 @@ export default function AdminDashboard() {
       </div>
 
       {showBlog && <BlogModal blog={showBlog} onClose={() => setShowBlog(null)} onSaved={() => { setShowBlog(null); loadBlogs(); loadStats(); }} />}
+      {showJob && <JobModal job={showJob} onClose={() => setShowJob(null)} onSaved={() => { setShowJob(null); loadJobs(); loadStats(); }} />}
     </div>
   );
 }
@@ -285,6 +293,65 @@ function Field({ label, value, onChange, type = "text", required, textarea, rows
       <label className="text-xs uppercase tracking-[0.2em] font-bold text-[#06252C]">{label}</label>
       <Cmp data-testid={tid} type={type} required={required} value={value} onChange={(e) => onChange(e.target.value)} rows={textarea ? rows : undefined}
         className="mt-1 w-full border border-[#06252C]/20 px-3 py-2 text-sm rounded-sm focus:outline-none focus:ring-2 focus:ring-[#F26C21]" />
+    </div>
+  );
+}
+
+function JobModal({ job, onClose, onSaved }) {
+  const isEdit = !!job.id;
+  const [form, setForm] = useState({
+    title: job.title || "",
+    company: job.company || "",
+    location: job.location || "",
+    type: job.type || "Job",
+    description: job.description || "",
+    apply_deadline: job.apply_deadline || "",
+    salary: job.salary || "",
+    skills: (job.skills || []).join(", "),
+    published: job.published ?? true,
+  });
+  const [busy, setBusy] = useState(false);
+
+  const submit = async (e) => {
+    e.preventDefault();
+    setBusy(true);
+    try {
+      const payload = { ...form, skills: form.skills.split(",").map((s) => s.trim()).filter(Boolean) };
+      if (isEdit) await api.patch(`/admin/jobs/${job.id}`, payload);
+      else await api.post("/admin/jobs", payload);
+      toast.success(isEdit ? "Updated" : "Created");
+      onSaved();
+    } catch (e) { toast.error(formatApiError(e)); }
+    finally { setBusy(false); }
+  };
+
+  return (
+    <div className="fixed inset-0 z-50 bg-black/50 grid place-items-center p-4" onClick={onClose}>
+      <form onClick={(e) => e.stopPropagation()} onSubmit={submit} className="bg-white rounded-sm max-w-2xl w-full max-h-[90vh] overflow-auto p-6 space-y-4" data-testid="job-modal">
+        <div className="flex justify-between items-center">
+          <h2 className="font-display text-2xl font-bold">{isEdit ? "Edit Posting" : "New Posting"}</h2>
+          <button type="button" onClick={onClose}><X /></button>
+        </div>
+        <Field label="Title" value={form.title} onChange={(v) => setForm({ ...form, title: v })} required tid="jm-title" />
+        <Field label="Company" value={form.company} onChange={(v) => setForm({ ...form, company: v })} required tid="jm-company" />
+        <Field label="Location" value={form.location} onChange={(v) => setForm({ ...form, location: v })} required tid="jm-location" />
+        <div>
+          <label className="text-xs uppercase tracking-[0.2em] font-bold text-[#06252C]">Type</label>
+          <select data-testid="jm-type" value={form.type} onChange={(e) => setForm({ ...form, type: e.target.value })}
+            className="mt-1 w-full border border-[#06252C]/20 px-3 py-2 text-sm rounded-sm focus:outline-none focus:ring-2 focus:ring-[#F26C21]">
+            <option>Job</option>
+            <option>Internship</option>
+          </select>
+        </div>
+        <Field label="Salary / Stipend (optional)" value={form.salary} onChange={(v) => setForm({ ...form, salary: v })} tid="jm-salary" />
+        <Field label="Apply deadline (YYYY-MM-DD, optional)" value={form.apply_deadline} onChange={(v) => setForm({ ...form, apply_deadline: v })} tid="jm-deadline" />
+        <Field label="Skills (comma-separated)" value={form.skills} onChange={(v) => setForm({ ...form, skills: v })} tid="jm-skills" />
+        <Field label="Description" value={form.description} onChange={(v) => setForm({ ...form, description: v })} required textarea rows={6} tid="jm-desc" />
+        <label className="flex items-center gap-2 text-sm"><input type="checkbox" checked={form.published} onChange={(e) => setForm({ ...form, published: e.target.checked })} /> Published</label>
+        <button type="submit" disabled={busy} data-testid="jm-save" className="w-full bg-[#F26C21] text-white py-3 text-sm font-semibold rounded-sm hover:bg-[#FF6600] disabled:opacity-50">
+          {busy ? "Saving..." : (isEdit ? "Update Posting" : "Create Posting")}
+        </button>
+      </form>
     </div>
   );
 }

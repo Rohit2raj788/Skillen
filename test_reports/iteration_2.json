@@ -1,0 +1,45 @@
+{
+  "summary": "Validated new Jobs/Internships feature + SkillBot chatbot. Backend Jobs APIs (public list/filter/search/detail, apply, admin CRUD, stats.total_jobs, auth-gated) all PASS. Public /jobs page, filters, search, apply modal + lead creation, chatbot rule-based replies (mock pricing 499/999), and Floating WhatsApp on bottom-left + chatbot on bottom-right (no overlap) all PASS. CRITICAL FRONTEND BUG: Admin Dashboard Jobs tab renders an empty panel — the `tab === 'jobs'` JSX block (with `new-job-btn`, jobs list, edit/delete) is missing from /app/frontend/src/pages/admin/Dashboard.jsx. JobModal component exists at line 300 but is never invoked because there is no UI to set `showJob`. Related: Leads tab shows job_apply leads as rows but Type badge is blank (LEAD_TYPE_LABELS['job_apply'] not defined) and no 'job_apply' filter chip in leads filter row.",
+  "tested_scope": ["frontend", "backend", "auth", "integration"],
+  "passed": [
+    "GET /api/jobs returns 4 seeded jobs",
+    "GET /api/jobs?type=Internship returns 2 internships",
+    "GET /api/jobs?q=hexaware returns 1 (Hexaware) case-insensitive",
+    "GET /api/jobs/{id} returns 200 for valid, 404 for unknown",
+    "POST /api/jobs/apply creates job_apply lead with job_id; unknown job_id → 404",
+    "Admin auth: POST /api/admin/jobs without bearer → 401",
+    "Admin CRUD: POST/PATCH/DELETE /api/admin/jobs all work with bearer token",
+    "GET /api/admin/jobs lists 5 (incl. unpublished new one) for admin",
+    "GET /api/admin/stats now includes total_jobs key",
+    "Public /jobs loads via Layout with Header; 4 cards render with type badges",
+    "jobs-search input + filter-all/filter-job/filter-internship buttons work",
+    "apply-{job_id} button opens apply-modal with apply-name/email/phone/resume/cover fields",
+    "apply-submit submits successfully; toast 'Application submitted!' shown; modal closes",
+    "New job_apply lead appears in admin Leads table (Test Applicant / applicant@test.com)",
+    "chatbot-toggle (bottom-right) opens chatbot-panel; typing 'mock' + chatbot-send returns reply containing ₹499 and ₹999",
+    "floating-whatsapp positioned at x≈24 (bottom-left); chatbot-toggle at x≈1285 (bottom-right) — no overlap"
+  ],
+  "failed": [
+    {
+      "area": "frontend/admin",
+      "issue": "Admin Dashboard Jobs tab content panel is completely missing — clicking tab-jobs activates the tab visually but the body is empty. No new-job-btn, no job rows, no edit/delete UI is rendered. JobModal cannot be opened from the UI, so admin cannot create/update/delete jobs via the dashboard (only via direct API).",
+      "evidence": "DOM under tab-jobs has 0 elements matching [data-testid^='jm-'], [data-testid='new-job-btn'], or [data-testid^='job-row']. Code review of /app/frontend/src/pages/admin/Dashboard.jsx shows only `{tab === 'overview' && ...}`, `{tab === 'leads' && ...}`, and `{tab === 'blogs' && ...}` blocks (lines 101–214). No `{tab === 'jobs' && ...}` block exists. JobModal is defined at line 300 and `loadJobs`/`jobs` state exist, but the panel JSX was not added.",
+      "priority": "HIGH"
+    },
+    {
+      "area": "frontend/admin",
+      "issue": "Leads tab does not render Type badge text for job_apply leads (LEAD_TYPE_LABELS['job_apply'] missing) and there is no 'job_apply' filter chip in the leads filter row.",
+      "evidence": "Screenshot shows Test Applicant / applicant@test.com row in Leads table with an empty Type column. Leads filter row only contains: all, contact, hiring, college, mock_booking, student_enroll — no job_apply option. Body text confirms 'Job Application' label is absent.",
+      "priority": "MEDIUM"
+    }
+  ],
+  "action_items": [
+    "Add the missing `{tab === 'jobs' && (...) }` JSX panel in /app/frontend/src/pages/admin/Dashboard.jsx (between the blogs block and the closing div around line 214). Include: count summary, `new-job-btn` (calls setShowJob({})), list/grid of jobs with title/company/type/published, and Edit (setShowJob(j)) / Delete (DELETE /api/admin/jobs/{id}) actions.",
+    "Add `job_apply: 'Job Application'` (and a TYPE_COLORS entry) to LEAD_TYPE_LABELS so the Leads tab badge renders correctly.",
+    "Add a 'job_apply' filter button to the leads filter chip row.",
+    "Minor: backend POST /api/admin/jobs ignores `is_published` in payload (uses `published` field name); confirm intended schema name and align."
+  ],
+  "success_rate": {"backend": "100%", "frontend": "80%"},
+  "retest_needed": true,
+  "full_testing_deferred": true
+}

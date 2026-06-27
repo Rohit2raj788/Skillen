@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Link, NavLink, useLocation } from "react-router-dom";
 import { Menu, X, Instagram, Linkedin, Mail, Phone } from "lucide-react";
 import { CONTACT } from "@/data/content";
+import Chatbot from "@/components/Chatbot";
 
 const NAV = [
   { to: "/", label: "Home" },
@@ -9,6 +10,7 @@ const NAV = [
   { to: "/companies", label: "Companies" },
   { to: "/colleges", label: "Colleges" },
   { to: "/courses", label: "Courses" },
+  { to: "/jobs", label: "Jobs" },
   { to: "/mock-interviews", label: "Mock Interviews" },
   { to: "/success-stories", label: "Success" },
   { to: "/blog", label: "Blog" },
@@ -164,7 +166,7 @@ export function FloatingWhatsApp() {
       target="_blank"
       rel="noreferrer"
       data-testid="floating-whatsapp"
-      className="fixed bottom-6 right-6 z-40 grid h-12 w-12 place-items-center bg-[#25D366] text-white rounded-full shadow-lg hover:scale-110 transition"
+      className="fixed bottom-6 left-6 z-40 grid h-12 w-12 place-items-center bg-[#25D366] text-white rounded-full shadow-lg hover:scale-110 transition"
       aria-label="WhatsApp us"
     >
       <svg viewBox="0 0 32 32" className="h-6 w-6 fill-current"><path d="M16.001 3C9.373 3 4 8.373 4 15a11.94 11.94 0 0 0 1.69 6.14L4 29l8.07-1.66A11.93 11.93 0 0 0 16 27c6.627 0 12-5.373 12-12S22.628 3 16.001 3zm0 21.7a9.66 9.66 0 0 1-4.93-1.34l-.36-.21-4.79.99 1.01-4.66-.23-.38A9.7 9.7 0 1 1 16 24.7zm5.43-7.27c-.3-.15-1.76-.87-2.04-.97-.27-.1-.47-.15-.66.15-.2.3-.76.97-.93 1.17-.17.2-.34.22-.63.07-.3-.15-1.25-.46-2.38-1.47-.88-.78-1.48-1.74-1.65-2.04-.17-.3-.02-.46.13-.61.13-.13.3-.34.45-.51.15-.17.2-.3.3-.5.1-.2.05-.38-.02-.53-.07-.15-.66-1.59-.9-2.18-.24-.57-.49-.49-.66-.5l-.57-.01c-.2 0-.5.07-.77.37-.27.3-1.02 1-1.02 2.44 0 1.44 1.05 2.83 1.2 3.03.15.2 2.06 3.14 5 4.41.7.3 1.25.48 1.67.62.7.22 1.34.19 1.84.12.56-.08 1.76-.72 2-1.42.25-.7.25-1.3.17-1.42-.07-.13-.27-.2-.57-.35z"/></svg>
@@ -178,6 +180,7 @@ export default function Layout({ children }) {
       <Header />
       <main className="flex-1">{children}</main>
       <FloatingWhatsApp />
+      <Chatbot />
       <Footer />
     </div>
   );

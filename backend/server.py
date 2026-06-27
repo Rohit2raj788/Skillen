@@ -183,6 +183,40 @@ class StatsOut(BaseModel):
     by_type: dict
     new_leads: int
     total_blogs: int
+    total_jobs: int = 0
+
+
+class JobIn(BaseModel):
+    title: str
+    company: str
+    location: str
+    type: Literal["Job", "Internship"]
+    description: str
+    apply_deadline: Optional[str] = None
+    salary: Optional[str] = None
+    skills: Optional[List[str]] = None
+    published: bool = True
+
+
+class JobPatch(BaseModel):
+    title: Optional[str] = None
+    company: Optional[str] = None
+    location: Optional[str] = None
+    type: Optional[Literal["Job", "Internship"]] = None
+    description: Optional[str] = None
+    apply_deadline: Optional[str] = None
+    salary: Optional[str] = None
+    skills: Optional[List[str]] = None
+    published: Optional[bool] = None
+
+
+class JobApplyIn(BaseModel):
+    job_id: str
+    name: str
+    email: EmailStr
+    phone: str
+    resume_url: Optional[str] = None
+    cover_note: Optional[str] = None
 
 
 # ---------------------------------------------------------------------------
@@ -255,6 +289,41 @@ async def create_enroll_lead(payload: EnrollLeadIn):
     return await _insert_lead("student_enroll", payload.model_dump())
 
 
+# Jobs / Internships --------------------------------------------------------
+@api_router.get("/jobs")
+async def list_jobs(type: Optional[str] = None, q: Optional[str] = None, limit: int = 100):
+    query: dict = {"published": True}
+    if type and type in ("Job", "Internship"):
+        query["type"] = type
+    if q:
+        query["$or"] = [
+            {"title": {"$regex": q, "$options": "i"}},
+            {"company": {"$regex": q, "$options": "i"}},
+            {"location": {"$regex": q, "$options": "i"}},
+        ]
+    cursor = db.jobs.find(query, {"_id": 0}).sort("created_at", -1).limit(limit)
+    return await cursor.to_list(limit)
+
+
+@api_router.get("/jobs/{job_id}")
+async def get_job(job_id: str):
+    job = await db.jobs.find_one({"id": job_id, "published": True}, {"_id": 0})
+    if not job:
+        raise HTTPException(status_code=404, detail="Job not found")
+    return job
+
+
+@api_router.post("/jobs/apply")
+async def apply_to_job(payload: JobApplyIn):
+    job = await db.jobs.find_one({"id": payload.job_id})
+    if not job:
+        raise HTTPException(status_code=404, detail="Job not found")
+    data = payload.model_dump()
+    data["job_title"] = job.get("title")
+    data["job_company"] = job.get("company")
+    return await _insert_lead("job_apply", data)
+
+
 # Public blog ---------------------------------------------------------------
 @api_router.get("/blogs")
 async def list_blogs(category: Optional[str] = None, limit: int = 50):
@@ -279,10 +348,11 @@ async def admin_stats(_: dict = Depends(get_admin_user)):
     total = await db.leads.count_documents({})
     new_count = await db.leads.count_documents({"status": "new"})
     blogs_count = await db.blogs.count_documents({})
+    jobs_count = await db.jobs.count_documents({})
     pipeline = [{"$group": {"_id": "$lead_type", "n": {"$sum": 1}}}]
     by_type_raw = await db.leads.aggregate(pipeline).to_list(20)
     by_type = {row["_id"]: row["n"] for row in by_type_raw}
-    return StatsOut(total_leads=total, by_type=by_type, new_leads=new_count, total_blogs=blogs_count)
+    return StatsOut(total_leads=total, by_type=by_type, new_leads=new_count, total_blogs=blogs_count, total_jobs=jobs_count)
 
 
 @api_router.get("/admin/leads")
@@ -367,6 +437,46 @@ async def admin_delete_blog(blog_id: str, _: dict = Depends(get_admin_user)):
     return {"ok": True}
 
 
+# Admin: Jobs ---------------------------------------------------------------
+@api_router.get("/admin/jobs")
+async def admin_list_jobs(_: dict = Depends(get_admin_user)):
+    cursor = db.jobs.find({}, {"_id": 0}).sort("created_at", -1)
+    return await cursor.to_list(500)
+
+
+@api_router.post("/admin/jobs")
+async def admin_create_job(payload: JobIn, _: dict = Depends(get_admin_user)):
+    doc = {
+        "id": str(uuid.uuid4()),
+        "created_at": now_iso(),
+        "updated_at": now_iso(),
+        **payload.model_dump(),
+    }
+    await db.jobs.insert_one(doc)
+    doc.pop("_id", None)
+    return doc
+
+
+@api_router.patch("/admin/jobs/{job_id}")
+async def admin_update_job(job_id: str, payload: JobPatch, _: dict = Depends(get_admin_user)):
+    updates = {k: v for k, v in payload.model_dump().items() if v is not None}
+    if not updates:
+        raise HTTPException(status_code=400, detail="No fields to update")
+    updates["updated_at"] = now_iso()
+    res = await db.jobs.update_one({"id": job_id}, {"$set": updates})
+    if res.matched_count == 0:
+        raise HTTPException(status_code=404, detail="Job not found")
+    return await db.jobs.find_one({"id": job_id}, {"_id": 0})
+
+
+@api_router.delete("/admin/jobs/{job_id}")
+async def admin_delete_job(job_id: str, _: dict = Depends(get_admin_user)):
+    res = await db.jobs.delete_one({"id": job_id})
+    if res.deleted_count == 0:
+        raise HTTPException(status_code=404, detail="Job not found")
+    return {"ok": True}
+
+
 # Health --------------------------------------------------------------------
 @api_router.get("/")
 async def root():
@@ -448,6 +558,34 @@ async def on_startup():
     await db.leads.create_index("lead_type")
     await db.blogs.create_index("slug", unique=True)
     await db.blogs.create_index("id", unique=True)
+    await db.jobs.create_index("id", unique=True)
+    await db.jobs.create_index("created_at")
+
+    # Seed sample jobs (idempotent by title+company)
+    sample_jobs = [
+        {"title": "QA Automation Intern", "company": "Hexaware", "location": "Bengaluru / Remote", "type": "Internship",
+         "description": "6-month paid internship working on Playwright + Selenium test suites for an enterprise SaaS platform. Mentored by senior SDETs.",
+         "apply_deadline": "2026-03-31", "salary": "₹20,000 / month stipend", "skills": ["Java", "Selenium", "Playwright", "SQL"]},
+        {"title": "Junior SDET", "company": "InfoTech Solutions", "location": "Pune", "type": "Job",
+         "description": "Full-time SDET role for fresh graduates. CTC ₹4.5–6 LPA. Work on API testing + automation pipelines.",
+         "apply_deadline": "2026-04-15", "salary": "₹4.5–6 LPA", "skills": ["API Testing", "Postman", "Java", "Git"]},
+        {"title": "Business Development Associate", "company": "EdTech Startup", "location": "Hyderabad", "type": "Job",
+         "description": "B2C inside sales role. Hot leads provided. Performance-linked incentives up to 50% of base.",
+         "apply_deadline": "2026-03-20", "salary": "₹3.5 LPA + incentives", "skills": ["Communication", "CRM", "Sales"]},
+        {"title": "Sales Intern", "company": "SkillEn Partner Co.", "location": "Remote", "type": "Internship",
+         "description": "Lead generation + outreach for a B2B SaaS startup. Convertible to full-time.",
+         "apply_deadline": "2026-03-25", "salary": "₹12,000 / month stipend", "skills": ["LinkedIn", "Email Outreach", "Excel"]},
+    ]
+    for j in sample_jobs:
+        exists = await db.jobs.find_one({"title": j["title"], "company": j["company"]})
+        if not exists:
+            await db.jobs.insert_one({
+                "id": str(uuid.uuid4()),
+                "created_at": now_iso(),
+                "updated_at": now_iso(),
+                "published": True,
+                **j,
+            })
 
     # Seed admin
     admin_email = os.environ.get("ADMIN_EMAIL", "admin@skillen.in").lower()

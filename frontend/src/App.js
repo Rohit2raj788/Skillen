@@ -15,6 +15,7 @@ import SuccessStories from "@/pages/SuccessStories";
 import About from "@/pages/About";
 import Blog, { BlogDetail } from "@/pages/Blog";
 import Contact from "@/pages/Contact";
+import Jobs from "@/pages/Jobs";
 import AdminLogin from "@/pages/admin/Login";
 import AdminDashboard from "@/pages/admin/Dashboard";
 
@@ -45,6 +46,8 @@ function App() {
             <Route path="/blog" element={wrap(<Blog />)} />
             <Route path="/blog/:slug" element={wrap(<BlogDetail />)} />
             <Route path="/contact" element={wrap(<Contact />)} />
+            <Route path="/jobs" element={wrap(<Jobs />)} />
+            <Route path="/internships" element={wrap(<Jobs />)} />
 
             <Route path="/admin/login" element={<AdminLogin />} />
             <Route path="/admin" element={<ProtectedAdmin><AdminDashboard /></ProtectedAdmin>} />
