@@ -2,6 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { ArrowRight, GraduationCap, Building2, School, Sparkles, Quote } from "lucide-react";
 import { Counter, SectionHeading, SectionLabel, PrimaryBtn, SecondaryBtn } from "@/components/Primitives";
+import TrendingJobs from "@/components/TrendingJobs";
 import {
   STATS, WHY_CHOOSE, PROGRAMS, PLACEMENT_STEPS, TESTIMONIALS, PARTNER_NAMES,
 } from "@/data/content";
@@ -134,6 +135,9 @@ export default function Home() {
           </div>
         </div>
       </section>
+
+      {/* TRENDING JOBS */}
+      <TrendingJobs />
 
       {/* FEATURED PROGRAMS */}
       <section className="py-20 lg:py-28" data-testid="programs-section">

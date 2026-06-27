@@ -1,0 +1,16 @@
+{
+  "summary": "Frontend-only smoke test for 3 new changes on SkillEn: logo image swap, ScrollToTop on route change, and TrendingJobs widget on home. All 5 checks passed.",
+  "tested_scope": ["frontend", "integration"],
+  "passed": [
+    "Nav logo renders real brand <img> with src https://customer-assets.emergentagent.com/job_skill-launch-3/artifacts/pnf7vadm_skillen%2C%20logo.jpg",
+    "Footer logo also renders the same brand image",
+    "TrendingJobs widget visible on home with label 'TRENDING NOW', heading 'Fresh openings — apply today.', view-all link href=/jobs, and exactly 3 cards (trending-job-*) populated from /api/jobs?limit=3 (verified card content e.g. INTERNSHIP / Sales Intern / SkillEn Partner Co. / Remote)",
+    "ScrollToTop works on route change: from home scrolled to bottom (scrollY=5092), clicking footer link /students -> scrollY=0; clicking footer link /companies -> scrollY=0",
+    "Regression: /jobs page loads and renders job listings (Sales Intern, Business Development Associate) with filters (ALL/JOB/INTERNSHIP) and search input"
+  ],
+  "failed": [],
+  "action_items": [],
+  "success_rate": {"backend": "N/A (skipped per request)", "frontend": "100%"},
+  "retest_needed": false,
+  "full_testing_deferred": true
+}

@@ -5,6 +5,7 @@ import "@/App.css";
 
 import { AuthProvider, useAuth } from "@/context/AuthContext";
 import Layout from "@/components/Layout";
+import ScrollToTop from "@/components/ScrollToTop";
 import Home from "@/pages/Home";
 import Students from "@/pages/Students";
 import Companies from "@/pages/Companies";
@@ -33,6 +34,7 @@ function App() {
     <div className="App">
       <BrowserRouter>
         <AuthProvider>
+          <ScrollToTop />
           <Toaster position="top-right" richColors />
           <Routes>
             <Route path="/" element={wrap(<Home />)} />

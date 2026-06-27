@@ -22,14 +22,11 @@ export function Logo({ light = false }) {
   const ink = light ? "text-white" : "text-[#06252C]";
   return (
     <Link to="/" data-testid="nav-logo" className={`flex items-center gap-2 ${ink}`}>
-      <span className="grid h-9 w-9 place-items-center bg-[#F26C21] text-white font-display font-black text-lg rounded-sm">
-        S
-      </span>
-      <span className="font-display font-extrabold tracking-tight text-xl">
-        skill<span className="relative">en
-          <span className="absolute -top-0.5 right-[-6px] h-1.5 w-1.5 rounded-full bg-[#F26C21] se-logo-dot" />
-        </span>
-      </span>
+      <img
+        src="https://customer-assets.emergentagent.com/job_skill-launch-3/artifacts/pnf7vadm_skillen%2C%20logo.jpg"
+        alt="SkillEn"
+        className={`h-10 w-auto object-contain ${light ? "bg-white rounded-sm p-1" : ""}`}
+      />
     </Link>
   );
 }
